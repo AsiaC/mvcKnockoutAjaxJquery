@@ -9,7 +9,7 @@ namespace SolutionName1.Model
     public class SalesOrder
     {
         public string CustomerName { get; set; }
-        public string SalesOrderId { get; set; }
+        public int SalesOrderId { get; set; }
         public string PONumber { get; set; }
     }
 }

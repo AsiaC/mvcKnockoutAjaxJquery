@@ -28,7 +28,7 @@ namespace SolutionName1.Web.Controllers
         }
 
         // GET: Sales/Details/5
-        public ActionResult Details(string id)
+        public ActionResult Details(int? id)
         {
             if (id == null)
             {
@@ -44,8 +44,8 @@ namespace SolutionName1.Web.Controllers
             salesOrderViewModel.SalesOrderId = salesOrder.SalesOrderId;
             salesOrderViewModel.CustomerName = salesOrder.CustomerName;
             salesOrderViewModel.PONumber = salesOrder.PONumber;
-            salesOrderViewModel.MessageToClient = "I orginated from the viewModel, rather then the model";
-            
+            salesOrderViewModel.MessageToClient = "I originated from the viewModel, rather then the model";
+
             return View(salesOrderViewModel);//zmieniam żeby brał nie z modelu date return View(salesOrder) tylko z nowego modelu
         }
 
@@ -53,11 +53,14 @@ namespace SolutionName1.Web.Controllers
         public ActionResult Create()
         {
             SalesOrderViewModel salesOrderViewModel = new SalesOrderViewModel();
+            //var id = _salesContext.SalesOrders.Last().SalesOrderId;
+
+            //salesOrderViewModel.CustomerName = "";
             return View(salesOrderViewModel);
         }
 
         // GET: Sales/Edit/5
-        public ActionResult Edit(string id)
+        public ActionResult Edit(int? id)
         {
             if (id == null)
             {
@@ -72,7 +75,7 @@ namespace SolutionName1.Web.Controllers
         }
 
         // GET: Sales/Delete/5
-        public ActionResult Delete(string id)
+        public ActionResult Delete(int? id)
         {
             if (id == null)
             {
@@ -93,6 +96,27 @@ namespace SolutionName1.Web.Controllers
                 _salesContext.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        public JsonResult Save(SalesOrderViewModel salesOrderViewModel)
+        {
+            SalesOrder salesOrder = new SalesOrder();
+            salesOrder.CustomerName = salesOrderViewModel.CustomerName;
+            salesOrder.PONumber = salesOrderViewModel.PONumber;
+
+            try
+            {
+                _salesContext.SalesOrders.Add(salesOrder);
+                _salesContext.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+            salesOrderViewModel.MessageToClient = string.Format("{0}’s sales order has been added to the database.", salesOrder.CustomerName);
+
+            return Json(new { salesOrderViewModel });
         }
     }
 }

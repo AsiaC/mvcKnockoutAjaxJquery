@@ -14,7 +14,7 @@
     <script src="~/Scripts/knockout.mapping-latest.js"></script>
     <script src="~/Scripts/salesorderviewmodel.js"></script>
     <script type="text/javascript">
-        var salesOrderViewModel = new salesOrderViewModel(@Html.Raw(data));
+        var salesOrderViewModel = new SalesOrderViewModel(@Html.Raw(data));
         ko.applyBindings(salesOrderViewModel);
     </script>
 }

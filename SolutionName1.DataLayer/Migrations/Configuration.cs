@@ -18,9 +18,9 @@ namespace SolutionName1.DataLayer.Migrations
         {
             context.SalesOrders.AddOrUpdate(
                 so => so.CustomerName,
-                new SalesOrder { SalesOrderId = "1", CustomerName = "Adam", PONumber = "9876" },
-                new SalesOrder { SalesOrderId = "2", CustomerName = "Michael" },
-                new SalesOrder { SalesOrderId = "3", CustomerName = "Dawid", PONumber = "Acme 9" }
+                new SalesOrder { /*SalesOrderId = "1",*/ CustomerName = "Adam", PONumber = "9876" },
+                new SalesOrder { /*SalesOrderId = "2",*/ CustomerName = "Michael" },
+                new SalesOrder { /*SalesOrderId = "3",*/ CustomerName = "Dawid", PONumber = "Acme 9" }
                 );
         }
     }
