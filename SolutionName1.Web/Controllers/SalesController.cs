@@ -52,7 +52,8 @@ namespace SolutionName1.Web.Controllers
         // GET: Sales/Create
         public ActionResult Create()
         {
-            return View();
+            SalesOrderViewModel salesOrderViewModel = new SalesOrderViewModel();
+            return View(salesOrderViewModel);
         }
 
         // GET: Sales/Edit/5
