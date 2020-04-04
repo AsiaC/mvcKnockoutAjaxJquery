@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SolutionName1.DataLayer
 {
-    class SalesContext : DbContext
+    public class SalesContext : DbContext
     {
         public SalesContext() :base("DefaultConnectionstring")
         {
