@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using SolutionName1.DataLayer;
 using SolutionName1.Model;
+using SolutionName1.Web.ViewModels;
 
 namespace SolutionName1.Web.Controllers
 {
@@ -38,30 +39,20 @@ namespace SolutionName1.Web.Controllers
             {
                 return HttpNotFound();
             }
-            return View(salesOrder);
+
+            SalesOrderViewModel salesOrderViewModel = new SalesOrderViewModel();
+            salesOrderViewModel.SalesOrderId = salesOrder.SalesOrderId;
+            salesOrderViewModel.CustomerName = salesOrder.CustomerName;
+            salesOrderViewModel.PONumber = salesOrder.PONumber;
+            salesOrderViewModel.MessageToClient = "I orginated from the viewModel, rather then the model";
+            
+            return View(salesOrderViewModel);//zmieniam żeby brał nie z modelu date return View(salesOrder) tylko z nowego modelu
         }
 
         // GET: Sales/Create
         public ActionResult Create()
         {
             return View();
-        }
-
-        // POST: Sales/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "SalesOrderId,CustomerName,PONumber")] SalesOrder salesOrder)
-        {
-            if (ModelState.IsValid)
-            {
-                _salesContext.SalesOrders.Add(salesOrder);
-                _salesContext.SaveChanges();
-                return RedirectToAction("Index");
-            }
-
-            return View(salesOrder);
         }
 
         // GET: Sales/Edit/5
@@ -79,22 +70,6 @@ namespace SolutionName1.Web.Controllers
             return View(salesOrder);
         }
 
-        // POST: Sales/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "SalesOrderId,CustomerName,PONumber")] SalesOrder salesOrder)
-        {
-            if (ModelState.IsValid)
-            {
-                _salesContext.Entry(salesOrder).State = EntityState.Modified;
-                _salesContext.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(salesOrder);
-        }
-
         // GET: Sales/Delete/5
         public ActionResult Delete(string id)
         {
@@ -108,17 +83,6 @@ namespace SolutionName1.Web.Controllers
                 return HttpNotFound();
             }
             return View(salesOrder);
-        }
-
-        // POST: Sales/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(string id)
-        {
-            SalesOrder salesOrder = _salesContext.SalesOrders.Find(id);
-            _salesContext.SalesOrders.Remove(salesOrder);
-            _salesContext.SaveChanges();
-            return RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)
