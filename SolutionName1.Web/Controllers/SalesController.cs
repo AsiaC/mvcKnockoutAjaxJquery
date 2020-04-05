@@ -71,7 +71,14 @@ namespace SolutionName1.Web.Controllers
             {
                 return HttpNotFound();
             }
-            return View(salesOrder);
+
+            SalesOrderViewModel salesOrderViewModel = new SalesOrderViewModel();
+            salesOrderViewModel.SalesOrderId = salesOrder.SalesOrderId;
+            salesOrderViewModel.CustomerName = salesOrder.CustomerName;
+            salesOrderViewModel.PONumber = salesOrder.PONumber;
+            salesOrderViewModel.MessageToClient = string.Format("The originalvalue of Customer Name is {0}", salesOrderViewModel.CustomerName);
+
+            return View(salesOrderViewModel);
         }
 
         // GET: Sales/Delete/5
