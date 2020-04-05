@@ -53,6 +53,7 @@ namespace SolutionName1.Web.Controllers
         public ActionResult Create()
         {
             SalesOrderViewModel salesOrderViewModel = new SalesOrderViewModel();
+            salesOrderViewModel.ObjectState = ObjectState.Added;
             //var id = _salesContext.SalesOrders.Last().SalesOrderId;
 
             //salesOrderViewModel.CustomerName = "";
@@ -77,6 +78,7 @@ namespace SolutionName1.Web.Controllers
             salesOrderViewModel.CustomerName = salesOrder.CustomerName;
             salesOrderViewModel.PONumber = salesOrder.PONumber;
             salesOrderViewModel.MessageToClient = string.Format("The originalvalue of Customer Name is {0}", salesOrderViewModel.CustomerName);
+            salesOrderViewModel.ObjectState = ObjectState.Unchanged;
 
             return View(salesOrderViewModel);
         }
@@ -108,20 +110,28 @@ namespace SolutionName1.Web.Controllers
         public JsonResult Save(SalesOrderViewModel salesOrderViewModel)
         {
             SalesOrder salesOrder = new SalesOrder();
+            salesOrder.SalesOrderId = salesOrderViewModel.SalesOrderId;
             salesOrder.CustomerName = salesOrderViewModel.CustomerName;
             salesOrder.PONumber = salesOrderViewModel.PONumber;
+            salesOrder.ObjectState = salesOrderViewModel.ObjectState;
 
-            try
-            {
-                _salesContext.SalesOrders.Add(salesOrder);
-                _salesContext.SaveChanges();
-            }
-            catch (Exception ex)
-            {
 
-                throw;
+            _salesContext.SalesOrders.Attach(salesOrder);
+            _salesContext.ChangeTracker.Entries<IObjectWithState>().Single().State = Helpers.ConvertState(salesOrder.ObjectState);
+            _salesContext.SaveChanges();
+
+            switch (salesOrderViewModel.ObjectState)
+            {
+                case ObjectState.Added:
+                    salesOrderViewModel.MessageToClient = string.Format("A sales order for {0} has been added to the database.", salesOrder.CustomerName);
+                    break;
+                case ObjectState.Modified:
+                    salesOrderViewModel.MessageToClient = string.Format("The customer name for this sales order has been updated to {0} in the the database.", salesOrder.CustomerName);
+                    break;
             }
-            salesOrderViewModel.MessageToClient = string.Format("{0}’s sales order has been added to the database.", salesOrder.CustomerName);
+            salesOrderViewModel.SalesOrderId = salesOrder.SalesOrderId;
+            salesOrderViewModel.ObjectState = ObjectState.Unchanged;
+
 
             return Json(new { salesOrderViewModel });
         }

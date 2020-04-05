@@ -1,4 +1,13 @@
-﻿SalesOrderViewModel = function (data) {
+﻿var ObjectState = {
+    Unchanged: 0,
+    Added: 1,
+    Modified: 2,
+    Deleted: 3
+}
+
+
+
+SalesOrderViewModel = function (data) {
     var self = this;
     ko.mapping.fromJS(data, {}, self);
 
@@ -14,4 +23,12 @@
             }
         });
     };
+
+    self.flagSalesOrderAsEdited = function () {
+        if (self.ObjectState() != ObjectState.Added) {
+            self.ObjectState(ObjectState.Modified);
+        }
+        return true;
+    };
+
 };
